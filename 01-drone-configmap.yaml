@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: drone
+  namespace: cicd
+data:
+  docker_api_version: '1.23'
+  gogs: 'true'
+  gogs_private_mode: 'true'
+  gogs_url: http://gogs.vcs.svc.cluster.local:3000
+  drone_open: 'true'
+  drone_db_driver: mysql
+  drone_db_datasource: drone:dronepass@tcp(mysql.cicd.svc.cluster.local:3306)/drone?parseTime=true
+  gin_mode: release
+  drone_server: ws://drone-server.cicd.svc.cluster.local:8000/ws/broker
+  remote_driver: gogs
