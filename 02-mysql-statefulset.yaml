@@ -1,14 +1,14 @@
-# apiVersion: v1
-# kind: ConfigMap
-# metadata:
-#   name: mysql-config
-#   namespace: cicd
-# data:
-#   db_name: drone
-#   user: drone
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  namespace: cicd
+data:
+  db_name: drone
+  user: drone
   # delete root_pass and user_pass once mysql-secret is working properly
-  # root_pass: rootpass
-  # user_pass: dronepass
+  root_pass: rootpass
+  user_pass: dronepass
 ---
 apiVersion: v1
 kind: Service
@@ -59,46 +59,46 @@ spec:
         - name: http
           containerPort: 3306
         env:
-        # - name: MYSQL_ROOT_PASSWORD
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: mysql-config
-        #       key: root_pass
-        # - name: MYSQL_DATABASE
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: mysql-config
-        #       key: db_name
-        # - name: MYSQL_USER
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: mysql-config
-        #       key: user
-        # - name: MYSQL_PASSWORD
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: mysql-config
-        #       key: user_pass
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
-            secretKeyRef:
-              name: mysql-secret
+            configMapKeyRef:
+              name: mysql-config
               key: root_pass
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: user_pass
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: user
         - name: MYSQL_DATABASE
           valueFrom:
-            secretKeyRef:
-              name: mysql-secret
+            configMapKeyRef:
+              name: mysql-config
               key: db_name
+        - name: MYSQL_USER
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config
+              key: user
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config
+              key: user_pass
+        # - name: MYSQL_ROOT_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: mysql-secret
+        #       key: root_pass
+        # - name: MYSQL_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: mysql-secret
+        #       key: user_pass
+        # - name: MYSQL_USER
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: mysql-secret
+        #       key: user
+        # - name: MYSQL_DATABASE
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: mysql-secret
+        #       key: db_name
         resources:
           requests:
             cpu: "0.01"
